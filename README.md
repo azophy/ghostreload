@@ -1,4 +1,4 @@
-# GhostReaload
+# GhostReload
 A short bash script to automate browser reload based on file change
 
 Created by : Abdurrahman Shofy Adianto <azophy@gmail.com>
