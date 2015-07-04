@@ -8,9 +8,8 @@ Watches the folder/files passed as arguments to the script and when it detects a
 
 #Requirement
 
-inotifywait
-
-xdotools
+* inotifywait
+* xdotools
 
 #installation
 
@@ -18,8 +17,8 @@ install inotify and xdotool first:
 > apt-get install inotify-tools xdotool
 
 then download this script and make it executable:
-> cd ghostreload
 
+> cd ghostreload
 > chmod +x GhostReload.sh
 
 #Usage:
