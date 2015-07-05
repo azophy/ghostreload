@@ -21,5 +21,9 @@ then download this script and make it executable:
 > cd ghostreload
 > chmod +x GhostReload.sh
 
+(otional) link it to bin directory so you could just "ghostreload" from everywhere:
+
+> ln -s /path/to/GhostReload.sh /usr/local/bin/ghostreload
+
 #Usage:
 > ./GhostReload.sh browser_name /folder/to/watch /some/folder/file_to_watch.html
