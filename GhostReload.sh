@@ -15,6 +15,25 @@
 RELOAD_KEYS="CTRL+R"
 #RELOAD_KEYS="SHIFT+CTRL+R"
 
+# Read another optional parameter
+while getopts ":f:" opt; do
+case $opt in
+   f)
+     SOURCE_FILE=$OPTARG
+     ;;
+   \?)
+     echo "Invalid option: -$OPTARG" >&2
+     exit 1
+     ;;
+   :)
+     echo "Option -$OPTARG requires an argument." >&2
+     exit 1
+     ;;
+esac
+done
+
+shift $((OPTIND-1))
+
 # set to whatever's given as argument
 BROWSER=$1
 
@@ -23,13 +42,18 @@ if [ -z "${BROWSER}" ]; then
     BROWSER=firefox
 fi
 
-args=("$@")
-WATCHED_FOLDERS=(${args[@]:1})
+shift 1
 TIME_FORMAT='%F %H:%M'
 OUTPUT_FORMAT='%T Event(s): %e fired for file: %w. Refreshing.'
 WATCHED_EVENT="modify"
 
-while inotifywait -e "${WATCHED_EVENT}" -q -r --timefmt "${TIME_FORMAT}" --format "${OUTPUT_FORMAT}" "${WATCHED_FOLDERS[@]}"; do
+# other custom params
+CUSTOM_PARAMS=""
+if [ ${#SOURCE_FILE} -gt 0 ]; then
+  CUSTOM_PARAMS+="--fromfile $SOURCE_FILE "
+fi
+
+while inotifywait ${CUSTOM_PARAMS} -e "${WATCHED_EVENT}" -q -r --timefmt "${TIME_FORMAT}" --format "${OUTPUT_FORMAT}" "${@}"; do
     #WINDOW_ID=$(xdotool search --onlyvisible --class google-chrome | tail -1)
     WINDOW_ID=$(xdotool search --onlyvisible --name ${BROWSER} | tail -1)
     echo "Current Window ID = " $WINDOW_ID
