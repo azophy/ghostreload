@@ -16,17 +16,35 @@ RELOAD_KEYS="CTRL+R"
 #RELOAD_KEYS="SHIFT+CTRL+R"
 
 # Read another optional parameter
-while getopts ":f:" opt; do
+while getopts ":hf:" opt; do
 case $opt in
+   h)
+     HELP_TEXT="GhostReload
+A short bash script to automate browser reload based on file change
+Usage: ghostreload [options] browser_name <file/folder 1> [file/folder 2] ....
+Options:
+	-h	Show this help text
+	-f <file_name>
+		Read file_name and use it as list of files/folders to be 
+		watched. The content is just list of all files/folders to be 
+		watched.
+	@<file>	Exclude the specified file from being watched. Could be used for 
+		parameters, or inserted to the source file list
+"
+     echo "$HELP_TEXT"
+     exit 1
+     ;;
    f)
      SOURCE_FILE=$OPTARG
      ;;
    \?)
      echo "Invalid option: -$OPTARG" >&2
+     echo "Type 'ghostscript -h' for helps"
      exit 1
      ;;
    :)
      echo "Option -$OPTARG requires an argument." >&2
+     echo "Type 'ghostscript -h' for helps"
      exit 1
      ;;
 esac
