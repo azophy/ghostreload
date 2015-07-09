@@ -16,7 +16,7 @@ RELOAD_KEYS="CTRL+R"
 #RELOAD_KEYS="SHIFT+CTRL+R"
 
 # Read another optional parameter
-while getopts ":hf:" opt; do
+while getopts ":hsf:" opt; do
 case $opt in
    h)
      HELP_TEXT="GhostReload
@@ -28,14 +28,22 @@ Options:
 		Read file_name and use it as list of files/folders to be 
 		watched. The content is just list of all files/folders to be 
 		watched.
-	@<file>	Exclude the specified file from being watched. Could be used for 
-		parameters, or inserted to the source file list
+	-s	Alternative way to select window to be reloaded. GhostReaload 
+		will show a cursor, use it to select a window you want to be 
+		automatically reload.
+	@<file>	Exclude the specified file from being watched. Could be used 
+		for parameters, or inserted to the source file list
 "
      echo "$HELP_TEXT"
      exit 1
      ;;
    f)
      SOURCE_FILE=$OPTARG
+     ;;
+   s)
+     WINDOW_ID=$(xdotool selectwindow)
+     PID_EXIST=true
+     echo "WINDOW_ID = $WINDOW_ID"
      ;;
    \?)
      echo "Invalid option: -$OPTARG" >&2
@@ -54,11 +62,13 @@ shift $((OPTIND-1))
 
 # set to whatever's given as argument
 BROWSER=$1
-
 # if was empty, default set to name of browser, firefox/chrome/opera/etc..
 if [ -z "${BROWSER}" ]; then
-    BROWSER=firefox
+    BROWSER=google-chrome
 fi
+
+# default search method
+SEARCH_METHOD="--class"
 
 shift 1
 TIME_FORMAT='%F %H:%M'
@@ -67,13 +77,15 @@ WATCHED_EVENT="modify"
 
 # other custom params
 CUSTOM_PARAMS=""
-if [ ${#SOURCE_FILE} -gt 0 ]; then
+if [ -n "${SOURCE_FILE}" ]; then
   CUSTOM_PARAMS+="--fromfile $SOURCE_FILE "
 fi
 
 while inotifywait ${CUSTOM_PARAMS} -e "${WATCHED_EVENT}" -q -r --timefmt "${TIME_FORMAT}" --format "${OUTPUT_FORMAT}" "${@}"; do
-    #WINDOW_ID=$(xdotool search --onlyvisible --class google-chrome | tail -1)
-    WINDOW_ID=$(xdotool search --onlyvisible --name ${BROWSER} | tail -1)
+    if [ -z "${PID_EXIST}" ]; then
+        WINDOW_ID=$(xdotool search --onlyvisible ${SEARCH_METHOD} ${BROWSER} | head -1)
+    fi
+
     echo "Current Window ID = " $WINDOW_ID
     xdotool key --window $WINDOW_ID $RELOAD_KEYS
 done
