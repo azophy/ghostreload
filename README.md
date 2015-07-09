@@ -26,4 +26,7 @@ then download this script and make it executable:
 > ln -s /path/to/GhostReload.sh /usr/local/bin/ghostreload
 
 #Usage:
-> ./GhostReload.sh browser_name /folder/to/watch /some/folder/file_to_watch.html
+> ghostreload browser_name /folder/to/watch /some/folder/file_to_watch.html
+
+#More interesting usages:
+Please refer to the script's help ( ghostreload -h )
