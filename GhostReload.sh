@@ -61,16 +61,19 @@ done
 shift $((OPTIND-1))
 
 # set to whatever's given as argument
-BROWSER=$1
-# if was empty, default set to name of browser, firefox/chrome/opera/etc..
-if [ -z "${BROWSER}" ]; then
-    BROWSER=google-chrome
+if [ -z "${PID_EXIST}" ]; then
+    BROWSER_TYPE=$1
+    # if was empty, default set to name of browser, firefox/chrome/opera/etc..
+    if [ -z "${BROWSER_TYPE}" ]; then
+        BROWSER_TYPE=google-chrome
+    else
+        shift 1
+    fi
 fi
 
 # default search method
 SEARCH_METHOD="--class"
 
-shift 1
 TIME_FORMAT='%F %H:%M'
 OUTPUT_FORMAT='%T Event(s): %e fired for file: %w. Refreshing.'
 WATCHED_EVENT="modify"
@@ -83,7 +86,7 @@ fi
 
 while inotifywait ${CUSTOM_PARAMS} -e "${WATCHED_EVENT}" -q -r --timefmt "${TIME_FORMAT}" --format "${OUTPUT_FORMAT}" "${@}"; do
     if [ -z "${PID_EXIST}" ]; then
-        WINDOW_ID=$(xdotool search --onlyvisible ${SEARCH_METHOD} ${BROWSER} | head -1)
+        WINDOW_ID=$(xdotool search --onlyvisible ${SEARCH_METHOD} ${BROWSER_TYPE} | head -1)
 	echo "Current Window ID = " $WINDOW_ID
     fi
 

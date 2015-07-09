@@ -28,5 +28,9 @@ then download this script and make it executable:
 #Usage:
 > ghostreload browser_name /folder/to/watch /some/folder/file_to_watch.html
 
+Notes: It seems that xdotool sometimes fail to recognize window by searching, so I suggest to use "-s" option which allows you to click the window you want to automatically reload rather then search for the browser name or class. The usage should be:
+
+> ghostreload -s /folder/to/watch
+
 #More interesting usages:
 Please refer to the script's help ( ghostreload -h )
