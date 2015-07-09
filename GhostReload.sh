@@ -84,9 +84,9 @@ fi
 while inotifywait ${CUSTOM_PARAMS} -e "${WATCHED_EVENT}" -q -r --timefmt "${TIME_FORMAT}" --format "${OUTPUT_FORMAT}" "${@}"; do
     if [ -z "${PID_EXIST}" ]; then
         WINDOW_ID=$(xdotool search --onlyvisible ${SEARCH_METHOD} ${BROWSER} | head -1)
+	echo "Current Window ID = " $WINDOW_ID
     fi
 
-    echo "Current Window ID = " $WINDOW_ID
     xdotool key --window $WINDOW_ID $RELOAD_KEYS
 done
 
